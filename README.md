@@ -8,4 +8,4 @@ Do note that some of these were solved by me around a year ago, although I don't
 | Set | Question | Time Taken | Attempted before |
 | --- | -------- | ---------- | ---------------- |
 | 1   | 1        | 0h12m      | Yes              |
-
+| 1   | 2        | 0h15m      | Yes              |

@@ -15,3 +15,18 @@ func TestQ1(t *testing.T) {
 		t.Errorf("value doesn't match: %v", res)
 	}
 }
+
+func TestQ2(t *testing.T) {
+	a := []byte("1c0111001f010100061a024b53535009181c")
+	b := []byte("686974207468652062756c6c277320657965")
+
+	c, err := Xor(a, b)
+	if err != nil {
+		t.Errorf("received error: %v", err)
+	}
+
+	req := []byte("746865206b696420646f6e277420706c6179")
+	if bytes.Compare(c, req) != 0 {
+		t.Errorf("value %v doesn't match: %v", c, req)
+	}
+}
