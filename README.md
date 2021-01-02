@@ -9,3 +9,4 @@ Do note that some of these were solved by me around a year ago, although I don't
 | --- | -------- | ---------- | ---------------- |
 | 1   | 1        | 0h12m      | Yes              |
 | 1   | 2        | 0h15m      | Yes              |
+| 1   | 3        | 0h25m      | Yes              |
