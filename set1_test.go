@@ -1,7 +1,10 @@
 package cryptopals
 
 import (
+	"bufio"
 	"bytes"
+	"os"
+	"strings"
 	"testing"
 )
 
@@ -32,9 +35,28 @@ func TestQ2(t *testing.T) {
 }
 
 func TestQ3(t *testing.T) {
-	key, s := SingleByteXorKey([]byte("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
+	key, _, s := SingleByteXorKey([]byte("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
 	t.Log(s)
 	if key != byte(88) {
+		t.Fail()
+	}
+}
+
+func TestQ4(t *testing.T) {
+	file, err := os.Open("_data/4.txt")
+	defer file.Close()
+	if err != nil {
+		t.Errorf("could not open file: %v", err)
+	}
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	s := MultipleSingleByteXorKey(lines)
+	if strings.Compare(s, "Now that the party is jumping\n") != 0 {
 		t.Fail()
 	}
 }

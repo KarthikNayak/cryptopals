@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	charFrequency = map[byte]float64{
+	// taken from https://opendata.stackexchange.com/questions/7042/ascii-character-frequency-analysis
+	charFrequency = map[byte]int{
 		' ': 67,
 		',': 4,
 		'.': 4,
@@ -86,8 +87,8 @@ func Xor(a, b []byte) ([]byte, error) {
 	return dst, nil
 }
 
-func CharacterFrequency(s []byte) float64 {
-	sum := 0.0
+func CharacterFrequency(s []byte) int {
+	sum := 0
 	s = []byte(strings.ToLower(string(s)))
 
 	for i := 0; i < len(s); i++ {
@@ -96,12 +97,12 @@ func CharacterFrequency(s []byte) float64 {
 	return sum
 }
 
-func SingleByteXorKey(hex []byte) (byte, string) {
+func SingleByteXorKey(hex []byte) (byte, int, string) {
 	b, _ := DecodeHex(hex)
 	dst := make([]byte, len(b))
 
 	maxString := ""
-	maxVal := 0.0
+	maxVal := 0
 	maxKey := 0
 
 	for key := 0; key < 256; key++ {
@@ -109,12 +110,24 @@ func SingleByteXorKey(hex []byte) (byte, string) {
 			dst[i] = b[i] ^ byte(key)
 		}
 		val := CharacterFrequency(dst)
-		if val > float64(maxVal) {
+		if val > maxVal {
 			maxString = string(dst)
 			maxVal = val
 			maxKey = key
 		}
 	}
 
-	return byte(maxKey), maxString
+	return byte(maxKey), maxVal, maxString
+}
+
+func MultipleSingleByteXorKey(list []string) string {
+	maxVal, maxString := 0, ""
+	for _, hex := range list {
+		_, val, s := SingleByteXorKey([]byte(hex))
+		if val > maxVal {
+			maxVal = val
+			maxString = s
+		}
+	}
+	return maxString
 }
