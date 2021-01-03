@@ -48,6 +48,13 @@ func DecodeHex(src []byte) ([]byte, error) {
 	return b, err
 }
 
+func EncodeHex(src []byte) []byte {
+	b := make([]byte, hex.EncodedLen(len(src)))
+	hex.Encode(b, src)
+
+	return b
+}
+
 func HexToB64(src []byte) ([]byte, error) {
 	b, err := DecodeHex(src)
 	if err != nil {
@@ -88,7 +95,7 @@ func Xor(a, b []byte) ([]byte, error) {
 }
 
 func CharacterFrequency(s []byte) int {
-	sum := 0
+	var sum int
 	s = []byte(strings.ToLower(string(s)))
 
 	for i := 0; i < len(s); i++ {
@@ -130,4 +137,14 @@ func MultipleSingleByteXorKey(list []string) string {
 		}
 	}
 	return maxString
+}
+
+func RepeatingXor(s string, key string) []byte {
+	b := make([]byte, len(s))
+
+	for i := range s {
+		b[i] = s[i] ^ key[i%len(key)]
+	}
+
+	return EncodeHex(b)
 }
