@@ -3,6 +3,7 @@ package cryptopals
 import (
 	"bufio"
 	"bytes"
+	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -70,7 +71,54 @@ I go crazy when I hear a cymbal`
 	expected := `0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f`
 
 	if strings.Compare(string(result), expected) != 0 {
+		t.Errorf("expected :%s\ngot      :%s", string(result), expected)
+	}
+}
+
+func TestHammingDistance(t *testing.T) {
+	a := "this is a test"
+	b := "wokka wokka!!!"
+	dist := HammingDistance([]byte(a), []byte(b))
+	if dist != 37 {
 		t.Fail()
 	}
-	t.Fail()
+}
+
+func TestBreakIntoBlocks(t *testing.T) {
+	d := []byte{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+	o := breakIntoBlocks(d, 2)
+	if len(o) != 2 || len(o[0]) != 5 {
+		t.Errorf("%#v", o)
+	}
+
+	o = breakIntoBlocks(d, 3)
+	t.Log(o)
+	if len(o) != 3 || len(o[0]) != 3 {
+		t.Errorf("%#v", o)
+	}
+
+	o = breakIntoBlocks(d, 5)
+	if len(o) != 5 || len(o[4]) != 1 {
+		t.Errorf("%#v", o)
+	}
+}
+
+func TestQ6(t *testing.T) {
+	data, err := ioutil.ReadFile("_data/6.txt")
+	if err != nil {
+		t.Errorf("error opening file: %v", err)
+	}
+
+	key, err := BreakRepeatingXor(data)
+	if err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expected := "Terminator X: Bring the noise"
+
+	if strings.Compare(string(key), expected) != 0 {
+		t.Errorf("expected :%s\ngot      :%s", string(key), expected)
+	}
+
 }

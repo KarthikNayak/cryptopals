@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"log"
+	"math/bits"
+	"sort"
 	"strings"
 )
 
@@ -55,6 +57,12 @@ func EncodeHex(src []byte) []byte {
 	return b
 }
 
+func DecodeB64(src []byte) ([]byte, error) {
+	b := make([]byte, base64.StdEncoding.DecodedLen(len(src)))
+	_, err := base64.StdEncoding.Decode(b, src)
+	return b, err
+}
+
 func HexToB64(src []byte) ([]byte, error) {
 	b, err := DecodeHex(src)
 	if err != nil {
@@ -99,22 +107,24 @@ func CharacterFrequency(s []byte) int {
 	s = []byte(strings.ToLower(string(s)))
 
 	for i := 0; i < len(s); i++ {
-		sum = sum + charFrequency[s[i]]
+		val, ok := charFrequency[s[i]]
+		if !ok {
+			val = -1
+		}
+		sum = sum + val
 	}
 	return sum
 }
 
-func SingleByteXorKey(hex []byte) (byte, int, string) {
-	b, _ := DecodeHex(hex)
-	dst := make([]byte, len(b))
-
+func SingleByteXorKeyRaw(src []byte) (byte, int, string) {
+	dst := make([]byte, len(src))
 	maxString := ""
 	maxVal := 0
 	maxKey := 0
 
 	for key := 0; key < 256; key++ {
 		for i := 0; i < len(dst); i++ {
-			dst[i] = b[i] ^ byte(key)
+			dst[i] = src[i] ^ byte(key)
 		}
 		val := CharacterFrequency(dst)
 		if val > maxVal {
@@ -125,6 +135,11 @@ func SingleByteXorKey(hex []byte) (byte, int, string) {
 	}
 
 	return byte(maxKey), maxVal, maxString
+}
+
+func SingleByteXorKey(hex []byte) (byte, int, string) {
+	b, _ := DecodeHex(hex)
+	return SingleByteXorKeyRaw(b)
 }
 
 func MultipleSingleByteXorKey(list []string) string {
@@ -147,4 +162,80 @@ func RepeatingXor(s string, key string) []byte {
 	}
 
 	return EncodeHex(b)
+}
+
+func HammingDistance(a, b []byte) int {
+	dist := 0
+
+	for i := range a {
+		val := a[i] ^ b[i]
+		dist = dist + bits.OnesCount(uint(val))
+	}
+
+	return dist
+}
+
+func findLowKeySize(data []byte, size int) []int {
+	type kv struct {
+		Key   int
+		Value float64
+	}
+
+	var ss []kv
+
+	for keySize := 2; keySize <= 40; keySize++ {
+		val := 0.0
+		for i := 0; i < 10; i++ {
+			d1, d2 := data[keySize*i:keySize*(i+1)], data[keySize*(i+1):keySize*(i+2)]
+			val = val + float64(HammingDistance(d1, d2))/float64(keySize)
+		}
+		val = val / 5
+
+		ss = append(ss, kv{keySize, val})
+	}
+
+	sort.Slice(ss, func(i, j int) bool {
+		return ss[i].Value < ss[j].Value
+	})
+
+	val := make([]int, size)
+	for i := range val {
+		val[i] = int(ss[i].Key)
+	}
+	return val
+}
+
+func breakIntoBlocks(src []byte, size int) [][]byte {
+	dst := make([][]byte, size)
+
+	for i := 0; i < size; i++ {
+		dst[i] = []byte{}
+	}
+
+	for i := range src {
+		dst[i%size] = append(dst[i%size], src[i])
+	}
+
+	return dst
+}
+
+func BreakRepeatingXor(src []byte) ([]byte, error) {
+	data, err := DecodeB64(src)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	keySizes := findLowKeySize(data, 1)
+
+	for _, keySize := range keySizes {
+		blocks := breakIntoBlocks(data, keySize)
+		key := make([]byte, keySize)
+
+		for i := 0; i < keySize; i++ {
+			key[i], _, _ = SingleByteXorKeyRaw(blocks[i])
+		}
+		return key, nil
+	}
+
+	return []byte{}, nil
 }

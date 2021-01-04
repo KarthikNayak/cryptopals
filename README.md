@@ -12,3 +12,4 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 1   | 3        | 0h25m      | Yes              |
 | 1   | 4        | 0h14m      | Yes              |
 | 1   | 5        | 0h10m      | Yes              |
+| 1   | 6        | 1h21m      | Yes              |
