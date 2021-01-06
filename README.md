@@ -15,6 +15,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 1   | 6        | 1h21m      | Yes              |
 | 1   | 7        | 0h53m      | Yes              |
 | 1   | 8        | 0h10m      | Yes              |
+| 2   | 9        | 0h12m      | Yes              |
 
 # Notes
 
