@@ -3,7 +3,6 @@ package cryptopals
 import (
 	"encoding/base64"
 	"encoding/hex"
-	"log"
 	"math/bits"
 	"sort"
 	"strings"
@@ -69,8 +68,6 @@ func HexToB64(src []byte) ([]byte, error) {
 		return b, err
 	}
 
-	log.Println(string(b))
-
 	dst := make([]byte, base64.StdEncoding.EncodedLen(len(b)))
 
 	base64.StdEncoding.Encode(dst, b)
@@ -87,9 +84,6 @@ func Xor(a, b []byte) ([]byte, error) {
 	if err != nil {
 		return bByte, err
 	}
-
-	log.Println(string(aByte))
-	log.Println(string(bByte))
 
 	c := make([]byte, len(aByte))
 	for i := 0; i < len(c); i++ {
@@ -238,4 +232,16 @@ func BreakRepeatingXor(src []byte) ([]byte, error) {
 	}
 
 	return []byte{}, nil
+}
+
+func DecrpytAESECB(src, key []byte) ([]byte, error) {
+	blk, err := NewAesEcb128Cipher(key)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	dst := make([]byte, len(src))
+	blk.Decrypt(dst, src)
+
+	return dst, nil
 }

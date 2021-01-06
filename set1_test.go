@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 	"testing"
@@ -36,8 +37,7 @@ func TestQ2(t *testing.T) {
 }
 
 func TestQ3(t *testing.T) {
-	key, _, s := SingleByteXorKey([]byte("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
-	t.Log(s)
+	key, _, _ := SingleByteXorKey([]byte("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
 	if key != byte(88) {
 		t.Fail()
 	}
@@ -93,7 +93,6 @@ func TestBreakIntoBlocks(t *testing.T) {
 	}
 
 	o = breakIntoBlocks(d, 3)
-	t.Log(o)
 	if len(o) != 3 || len(o[0]) != 3 {
 		t.Errorf("%#v", o)
 	}
@@ -121,4 +120,28 @@ func TestQ6(t *testing.T) {
 		t.Errorf("expected :%s\ngot      :%s", string(key), expected)
 	}
 
+}
+
+func TestQ7(t *testing.T) {
+	b64, err := ioutil.ReadFile("_data/7.txt")
+	if err != nil {
+		t.Errorf("error opening file: %v", err)
+	}
+
+	key := []byte("YELLOW SUBMARINE")
+
+	data, err := DecodeB64(b64)
+	if err != nil {
+		t.Errorf("error decoding b64: %v", err)
+	}
+
+	log.Println(len(data), len(data)/16, len(data)%16)
+	res, err := DecrpytAESECB(data, key)
+	if err != nil {
+		t.Errorf("error decoding aes: %v", err)
+	}
+
+	if !strings.Contains(string(res), "Play that funky music Come on, Come on, let me hear") {
+		t.Fail()
+	}
 }
