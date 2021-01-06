@@ -1,6 +1,7 @@
 package cryptopals
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/hex"
 	"math/bits"
@@ -244,4 +245,15 @@ func DecrpytAESECB(src, key []byte) ([]byte, error) {
 	blk.Decrypt(dst, src)
 
 	return dst, nil
+}
+
+func DetectAESECB(data []byte) bool {
+	for i := 0; i < len(data); i = i + 16 {
+		for j := i + 16; j < len(data); j = j + 16 {
+			if bytes.Compare(data[i:i+16], data[j:j+16]) == 0 {
+				return true
+			}
+		}
+	}
+	return false
 }

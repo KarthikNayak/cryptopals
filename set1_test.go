@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 	"testing"
@@ -135,7 +134,6 @@ func TestQ7(t *testing.T) {
 		t.Errorf("error decoding b64: %v", err)
 	}
 
-	log.Println(len(data), len(data)/16, len(data)%16)
 	res, err := DecrpytAESECB(data, key)
 	if err != nil {
 		t.Errorf("error decoding aes: %v", err)
@@ -144,4 +142,22 @@ func TestQ7(t *testing.T) {
 	if !strings.Contains(string(res), "Play that funky music Come on, Come on, let me hear") {
 		t.Fail()
 	}
+}
+
+func TestQ8(t *testing.T) {
+	file, err := os.Open("_data/8.txt")
+	defer file.Close()
+	if err != nil {
+		t.Errorf("could not open file: %v", err)
+	}
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		detected := DetectAESECB([]byte(line))
+		if detected {
+			return
+		}
+	}
+	t.Fail()
 }

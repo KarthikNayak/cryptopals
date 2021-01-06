@@ -14,6 +14,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 1   | 5        | 0h10m      | Yes              |
 | 1   | 6        | 1h21m      | Yes              |
 | 1   | 7        | 0h53m      | Yes              |
+| 1   | 8        | 0h10m      | Yes              |
 
 # Notes
 
@@ -25,3 +26,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 - Best way is to implement cipher.Block
 - Newlines by cryptopals gets to you ;( 
 - You don't need to know the encryption algorithms internals to break it ;)
+
+### Q8
+
+- Detecting ECB mode is quite easy, how does this help us though?
