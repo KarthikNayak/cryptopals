@@ -16,6 +16,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 1   | 7        | 0h53m      | Yes              |
 | 1   | 8        | 0h10m      | Yes              |
 | 2   | 9        | 0h12m      | Yes              |
+| 2   | 10       | 0h29m      | Yes              |
 
 # Notes
 
@@ -31,3 +32,11 @@ Do note that some of these were solved by me around a year ago, although I don't
 ### Q8
 
 - Detecting ECB mode is quite easy, how does this help us though?
+
+## Set 2
+
+### Q10
+
+- This talks about the ECB mode code that we wrote in Q7, but in Go there is no support for ECB mode inbuilt in the crypto library. 
+- This means that you probably used the `cypto/aes` and built ECB over it.
+- With that context the question is quite confusing as you can't really re-use the ECB code you wrote earlier. I took some time understanding the question.

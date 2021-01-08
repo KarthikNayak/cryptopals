@@ -11,3 +11,15 @@ func PKCS7Padding(src []byte, blockLength int) []byte {
 
 	return dst
 }
+
+func DecryptAESCBC(src, key, iv []byte) ([]byte, error) {
+	blk, err := NewAesCbc128Cipher(key, iv)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	dst := make([]byte, len(src))
+	blk.Decrypt(dst, src)
+
+	return dst, nil
+}
