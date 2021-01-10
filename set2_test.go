@@ -43,3 +43,42 @@ func TestQ10(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestRandomAESKey(t *testing.T) {
+	key := RandomAESKey()
+	if len(key) != BlockSize {
+		t.Fail()
+	}
+}
+
+func TestRandomData(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		data := RandomText(5, 10)
+		if len(data) < 5 || len(data) >= 10 {
+			t.Fail()
+		}
+	}
+}
+
+func TestEncryptionOracle(t *testing.T) {
+	src := "Hello world! This is some lorem ipsum stuff"
+	dst, err := EncryptionOracle([]byte(src))
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(dst) == len(src) {
+		t.Fail()
+	}
+}
+
+func TestDetectionOracle(t *testing.T) {
+	enc, err := DetectionOracle()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if enc != CBC && enc != ECB {
+		t.Fail()
+	}
+}
