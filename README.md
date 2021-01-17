@@ -18,6 +18,8 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 2   | 9        | 0h12m      | Yes              |
 | 2   | 10       | 0h29m      | Yes              |
 | 2   | 11       | 0h32m      | Yes              |
+| 2   | 12       | 1h29m      | Yes              |
+| 2   | 13       | 0h59m      | Yes              |
 
 # Notes
 
@@ -45,3 +47,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 ### Q11 
 
 - `Rand.Intn(n int)` panics when n == 0. 
+
+### Q12
+
+- The toughest part was coming up with a clean to calculate the required sizes of prefix

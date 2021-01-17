@@ -2,7 +2,6 @@ package cryptopals
 
 import (
 	"io/ioutil"
-	"log"
 	"strings"
 	"testing"
 )
@@ -31,8 +30,6 @@ func TestQ10(t *testing.T) {
 	if err != nil {
 		t.Errorf("error decoding b64: %v", err)
 	}
-
-	log.Println(len(data), len(data)/16, len(data)%16)
 
 	res, err := DecryptAESCBC(data, key, iv)
 	if err != nil {
@@ -79,6 +76,47 @@ func TestDetectionOracle(t *testing.T) {
 	}
 
 	if enc != CBC && enc != ECB {
+		t.Fail()
+	}
+}
+
+func TestQ12(t *testing.T) {
+	s, err := DecryptECBConsistent()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !strings.Contains(s, "Rollin' in my 5.0") {
+		t.Fail()
+	}
+}
+
+func TestMapQueryParam(t *testing.T) {
+	s := "foo=bar&baz=qux&zap=zazzle"
+	m := mapQueryParam(s)
+
+	if len(m) != 3 {
+		t.Fail()
+	}
+	if m["foo"] != "bar" {
+		t.Fail()
+	}
+}
+
+func TestProfileFor(t *testing.T) {
+	enc := profileFor("foo@bar.com")
+	m := mapQueryParam(enc)
+	if len(m) != 3 {
+		t.Fail()
+	}
+	if m["email"] != "foo@bar.com" {
+		t.Fail()
+	}
+}
+
+func TestQ13(t *testing.T) {
+	m := ECBCutPaste()
+	if m["role"] != "admin" {
 		t.Fail()
 	}
 }
