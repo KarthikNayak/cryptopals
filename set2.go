@@ -72,10 +72,7 @@ func RandomText(start, end int) []byte {
 func EncryptionOracle(src []byte) ([]byte, error) {
 	prefix := RandomText(5, 10)
 	src = append(prefix, src...)
-
-	suffixSize := BlockSize - (len(src) % BlockSize)
-	suffix := RandomText(suffixSize, suffixSize)
-	src = append(src, suffix...)
+	src = PKCS7Padding([]byte(src), BlockSize)
 
 	key := RandomAESKey()
 
@@ -121,10 +118,7 @@ func DetectionOracle() (int, error) {
 
 func ECBConsistentOracle(prefix, src []byte, keyGen func() []byte) ([]byte, error) {
 	src = append(prefix, src...)
-
-	padSize := BlockSize - (len(src) % BlockSize)
-	pad := RandomText(padSize, padSize)
-	src = append(src, pad...)
+	src = PKCS7Padding([]byte(src), BlockSize)
 
 	key := keyGen()
 
@@ -222,9 +216,7 @@ func profileFor(email string) string {
 func encryptUserProfile(profile string, key []byte) []byte {
 	blk, _ := NewAesEcb128Cipher(key)
 
-	suffixSize := BlockSize - (len(profile) % BlockSize)
-	suffix := RandomText(suffixSize, suffixSize)
-	src := append([]byte(profile), suffix...)
+	src := PKCS7Padding([]byte(profile), BlockSize)
 
 	dst := make([]byte, len(src))
 	blk.Encrypt(dst, []byte(src))
@@ -276,4 +268,99 @@ func ECBCutPaste() map[string]string {
 	}
 
 	return decryptUserProfile(b1, key)
+}
+
+func ECBInconsistentOracle(r, prefix, src []byte, keyGen func() []byte) ([]byte, error) {
+	src = append(prefix, src...)
+	src = append(r, src...)
+	src = PKCS7Padding([]byte(src), BlockSize)
+
+	key := keyGen()
+
+	var err error
+	var blk cipher.Block
+
+	blk, err = NewAesEcb128Cipher(key)
+
+	if err != nil {
+		return []byte{}, err
+	}
+
+	dst := make([]byte, len(src))
+	blk.Encrypt(dst, src)
+
+	return dst, nil
+}
+
+func findLengthofRandomPrefix(encryptor func(prefix []byte) []byte) int {
+	x := []byte{}
+	for i := 0; i < BlockSize*2; i++ {
+		x = append(x, 'A')
+	}
+
+	for i := 1; i < BlockSize; i++ {
+		x = append(x, 'A')
+		data := encryptor(x)
+		if bytes.Compare(data[BlockSize:BlockSize*2], data[BlockSize*2:BlockSize*3]) == 0 {
+			return BlockSize - i
+		}
+	}
+	return 0
+}
+
+func DecryptECBInconsistent() (string, error) {
+	unkown := "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
+	unkownB, err := DecodeB64([]byte(unkown))
+
+	if err != nil {
+		return "", err
+	}
+
+	keyGen := RandomFixedAESKey()
+	r := RandomText(4, 10)
+
+	encryptor := func(prefix []byte) []byte {
+		x, _ := ECBInconsistentOracle(r, prefix, unkownB, keyGen)
+		return x
+	}
+
+	blockSize := BlockSize
+
+	randomSize := findLengthofRandomPrefix(encryptor)
+	filler := []byte{}
+	for i := 0; i < BlockSize-randomSize; i++ {
+		filler = append(filler, 'A')
+	}
+
+	totalSize := encryptor([]byte{})
+	final := make([]byte, 0)
+
+	for i := 0; i < len(totalSize); i++ {
+		x := make([]byte, blockSize-(i%blockSize)-1)
+		for j := 0; j < len(x); j++ {
+			x[j] = byte('A')
+		}
+		x = append(filler, x...)
+
+		output := encryptor(x)
+		output = output[BlockSize:]
+		x = append(x, final...)
+
+		blockToCmp := (i / blockSize)
+		startIndex := blockSize * blockToCmp
+		endIndex := startIndex + blockSize
+
+		for j := 0; j < 256; j++ {
+			val := append(x, byte(j))
+			cmp := encryptor(val)
+			cmp = cmp[BlockSize:]
+
+			if bytes.Compare(output[startIndex:endIndex], cmp[startIndex:endIndex]) == 0 {
+				final = append(final, byte(j))
+				break
+			}
+		}
+		fmt.Println(string(final))
+	}
+	return string(final), nil
 }

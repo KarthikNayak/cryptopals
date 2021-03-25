@@ -1,7 +1,8 @@
 # cryptopals
-Solving the matasano challenge, while timing myself doing it! 
 
-Do note that some of these were solved by me around a year ago, although I don't remember them at this point, I think it definitely helps solve them again. 
+Solving the matasano challenge, while timing myself doing it!
+
+Do note that some of these were solved by me around a year ago, although I don't remember them at this point, I think it definitely helps solve them again.
 
 # Time Taken
 
@@ -20,6 +21,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 2   | 11       | 0h32m      | Yes              |
 | 2   | 12       | 1h29m      | Yes              |
 | 2   | 13       | 0h59m      | Yes              |
+| 2   | 14       | 1h07m      | Yes              |
 
 # Notes
 
@@ -29,7 +31,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 
 - Go doesn't internally have support for AES ECB mode
 - Best way is to implement cipher.Block
-- Newlines by cryptopals gets to you ;( 
+- Newlines by cryptopals gets to you ;(
 - You don't need to know the encryption algorithms internals to break it ;)
 
 ### Q8
@@ -40,13 +42,13 @@ Do note that some of these were solved by me around a year ago, although I don't
 
 ### Q10
 
-- This talks about the ECB mode code that we wrote in Q7, but in Go there is no support for ECB mode inbuilt in the crypto library. 
+- This talks about the ECB mode code that we wrote in Q7, but in Go there is no support for ECB mode inbuilt in the crypto library.
 - This means that you probably used the `cypto/aes` and built ECB over it.
 - With that context the question is quite confusing as you can't really re-use the ECB code you wrote earlier. I took some time understanding the question.
 
-### Q11 
+### Q11
 
-- `Rand.Intn(n int)` panics when n == 0. 
+- `Rand.Intn(n int)` panics when n == 0.
 
 ### Q12
 

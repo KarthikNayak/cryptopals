@@ -116,7 +116,36 @@ func TestProfileFor(t *testing.T) {
 
 func TestQ13(t *testing.T) {
 	m := ECBCutPaste()
-	if m["role"] != "admin" {
+	if !strings.Contains(m["role"], "admin") {
+		t.Fail()
+	}
+}
+
+func TestFindLengthofRandomPrefix(t *testing.T) {
+	unkown := "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
+	unkownB, _ := DecodeB64([]byte(unkown))
+
+	keyGen := RandomFixedAESKey()
+	r := RandomText(1, 10)
+
+	encryptor := func(prefix []byte) []byte {
+		x, _ := ECBInconsistentOracle(r, prefix, unkownB, keyGen)
+		return x
+	}
+
+	l := findLengthofRandomPrefix(encryptor)
+	if l != len(r) {
+		t.Fatalf("wanted length: %v got %v", len(r), l)
+	}
+}
+
+func TestQ14(t *testing.T) {
+	s, err := DecryptECBInconsistent()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !strings.Contains(s, "Rollin' in my 5.0") {
 		t.Fail()
 	}
 }
