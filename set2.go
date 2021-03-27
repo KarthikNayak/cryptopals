@@ -364,3 +364,24 @@ func DecryptECBInconsistent() (string, error) {
 	}
 	return string(final), nil
 }
+
+func StripPKCS7(data []byte) []byte {
+	padSize := data[len(data)-1]
+
+	valid := true
+	if padSize == 0 {
+		valid = false
+	}
+
+	for i := len(data) - int(padSize); i < len(data); i++ {
+		if data[i] != padSize {
+			valid = false
+			break
+		}
+	}
+
+	if valid {
+		return data[:len(data)-int(padSize)]
+	}
+	return data
+}

@@ -1,6 +1,8 @@
 package cryptopals
 
 import (
+	"bytes"
+	"fmt"
 	"io/ioutil"
 	"strings"
 	"testing"
@@ -147,5 +149,28 @@ func TestQ14(t *testing.T) {
 
 	if !strings.Contains(s, "Rollin' in my 5.0") {
 		t.Fail()
+	}
+}
+
+func TestQ15(t *testing.T) {
+	tests := []struct {
+		input  []byte
+		output []byte
+	}{
+		{input: []byte{5, 6, 4, 3, 3, 3}, output: []byte{5, 6, 4}},
+		{input: []byte{5, 6, 4, 3, 4, 3}, output: []byte{5, 6, 4, 3, 4, 3}},
+		{input: []byte{5, 6, 4, 0}, output: []byte{5, 6, 4, 0}},
+		{input: []byte{5, 6, 4, 1}, output: []byte{5, 6, 4}},
+	}
+
+	for _, test := range tests {
+		t.Run(fmt.Sprintf("%v", test.input), func(t *testing.T) {
+			t.Parallel()
+			output := StripPKCS7(test.input)
+
+			if bytes.Compare(test.output, output) != 0 {
+				t.Fatalf("expected: %v got: %v", test.output, output)
+			}
+		})
 	}
 }
