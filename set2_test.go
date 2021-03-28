@@ -174,3 +174,20 @@ func TestQ15(t *testing.T) {
 		})
 	}
 }
+
+func TestQ16(t *testing.T) {
+	key := RandomAESKey()
+	iv := make([]byte, BlockSize)
+
+	encryptor := func(src []byte) []byte {
+		return CombineUserData(src, key, iv)
+	}
+	checker := func(src []byte) bool {
+		return CheckForCBCAdmin(key, iv, src)
+	}
+
+	flipped := CBCBitFlipping(checker, encryptor)
+	if !flipped {
+		t.Fail()
+	}
+}

@@ -20,6 +20,10 @@ func init() {
 
 func PKCS7Padding(src []byte, blockLength int) []byte {
 	padLen := blockLength - (len(src) % blockLength)
+	if padLen == blockLength {
+		return src
+	}
+
 	dst := make([]byte, len(src)+padLen)
 
 	copy(dst, src)
@@ -384,4 +388,64 @@ func StripPKCS7(data []byte) []byte {
 		return data[:len(data)-int(padSize)]
 	}
 	return data
+}
+
+func CombineUserData(input, key, iv []byte) []byte {
+	prefix := "comment1=cooking%20MCs;userdata="
+	postfix := ";comment2=%20like%20a%20pound%20of%20bacon"
+
+	var data []byte
+
+	data = append(data, []byte(prefix)...)
+
+	for _, val := range input {
+		if val == byte(';') {
+			data = append(data, "\";\""...)
+		} else if val == byte('=') {
+			data = append(data, "\"=\""...)
+		} else {
+			data = append(data, val)
+		}
+	}
+
+	data = append(data, postfix...)
+	data = PKCS7Padding(data, BlockSize)
+
+	blk, _ := NewAesCbc128Cipher(key, iv)
+	dst := make([]byte, len(data))
+	blk.Encrypt(dst, data)
+
+	return dst
+}
+
+func CheckForCBCAdmin(key, iv, src []byte) bool {
+	blk, _ := NewAesCbc128Cipher(key, iv)
+	dst := make([]byte, len(src))
+	blk.Decrypt(dst, src)
+
+	return strings.Contains(string(dst), ";admin=true;")
+}
+
+func CBCBitFlipping(checker func(data []byte) bool, encryptor func(src []byte) []byte) bool {
+	prefixLength := len("comment1=cooking%20MCs;userdata=")
+	padding := BlockSize - prefixLength%BlockSize
+	if padding == BlockSize {
+		padding = 0
+	}
+
+	x := make([]byte, padding+BlockSize)
+	for i := 0; i < len(x); i++ {
+		x[i] = 'A'
+	}
+
+	enc := encryptor(x)
+
+	needed := ";admin=true;"
+	have := ";comment2=%20like%20a%20pound%20of%20bacon"
+
+	for i := padding + prefixLength; i < padding+prefixLength+len(needed); i++ {
+		zeroIndex := i - padding - prefixLength
+		enc[i] = needed[zeroIndex] ^ have[zeroIndex] ^ enc[i]
+	}
+	return checker(enc)
 }

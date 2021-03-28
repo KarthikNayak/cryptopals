@@ -23,6 +23,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 2   | 13       | 0h59m      | Yes              |
 | 2   | 14       | 1h07m      | Yes              |
 | 2   | 15       | 0h27m      | Yes              |
+| 2   | 16       | 0h47m      | Yes              |
 
 # Notes
 
@@ -57,4 +58,4 @@ Do note that some of these were solved by me around a year ago, although I don't
 
 ### Q14
 
-- The question was a little confusing, it took some time to understand that the random string was fixed 
+- The question was a little confusing, it took some time to understand that the random string was fixed
