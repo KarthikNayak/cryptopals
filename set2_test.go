@@ -161,6 +161,10 @@ func TestQ15(t *testing.T) {
 		{input: []byte{5, 6, 4, 3, 4, 3}, output: []byte{5, 6, 4, 3, 4, 3}},
 		{input: []byte{5, 6, 4, 0}, output: []byte{5, 6, 4, 0}},
 		{input: []byte{5, 6, 4, 1}, output: []byte{5, 6, 4}},
+		{
+			input:  []byte{48, 48, 48, 48, 48, 54, 65, 110, 100, 32, 97, 32, 104, 105, 103, 104, 52, 54, 44, 86, 143, 225, 222, 192, 19, 59, 102, 236, 123, 43, 105, 50, 101, 100, 32, 117, 112, 32, 116, 101, 109, 112, 111, 0, 0, 3, 3, 48},
+			output: []byte{48, 48, 48, 48, 48, 54, 65, 110, 100, 32, 97, 32, 104, 105, 103, 104, 52, 54, 44, 86, 143, 225, 222, 192, 19, 59, 102, 236, 123, 43, 105, 50, 101, 100, 32, 117, 112, 32, 116, 101, 109, 112, 111, 0, 0, 3, 3, 48},
+		},
 	}
 
 	for _, test := range tests {
@@ -168,7 +172,7 @@ func TestQ15(t *testing.T) {
 			t.Parallel()
 			output := StripPKCS7(test.input)
 
-			if bytes.Compare(test.output, output) != 0 {
+			if bytes.Equal(test.output, output) {
 				t.Fatalf("expected: %v got: %v", test.output, output)
 			}
 		})

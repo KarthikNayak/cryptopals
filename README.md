@@ -24,6 +24,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 2   | 14       | 1h07m      | Yes              |
 | 2   | 15       | 0h27m      | Yes              |
 | 2   | 16       | 0h47m      | Yes              |
+| 3   | 17       | 3h47m      | Yes              |
 
 # Notes
 
@@ -59,3 +60,10 @@ Do note that some of these were solved by me around a year ago, although I don't
 ### Q14
 
 - The question was a little confusing, it took some time to understand that the random string was fixed
+
+## Set 3
+
+### Q17
+
+Theres's was a lot of initial confusion understand the question. The question fails to mention that the user has access to the IV. Which is slighyly hinted but not explicit.
+Beyond this, the math while is simple, is easy to mess up. I had a lot of confusion writing the code to ensure that it worked over multiple blocks. Finally resorting to splitting the blocks and discarding solved blocks.

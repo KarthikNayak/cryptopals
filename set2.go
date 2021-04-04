@@ -148,7 +148,7 @@ func DetectECBBlockSize(encrypt func([]byte) []byte) int {
 			data[i] = byte('A')
 		}
 		enc := encrypt(data)
-		if bytes.Compare(enc[0:size], enc[size:2*size]) == 0 {
+		if bytes.Equal(enc[0:size], enc[size:2*size]) {
 			return size
 		}
 	}
@@ -359,12 +359,11 @@ func DecryptECBInconsistent() (string, error) {
 			cmp := encryptor(val)
 			cmp = cmp[BlockSize:]
 
-			if bytes.Compare(output[startIndex:endIndex], cmp[startIndex:endIndex]) == 0 {
+			if bytes.Equal(output[startIndex:endIndex], cmp[startIndex:endIndex]) {
 				final = append(final, byte(j))
 				break
 			}
 		}
-		fmt.Println(string(final))
 	}
 	return string(final), nil
 }
@@ -372,22 +371,17 @@ func DecryptECBInconsistent() (string, error) {
 func StripPKCS7(data []byte) []byte {
 	padSize := data[len(data)-1]
 
-	valid := true
-	if padSize == 0 {
-		valid = false
+	if int(padSize) > len(data) || padSize == 0 {
+		return data
 	}
 
-	for i := len(data) - int(padSize); i < len(data); i++ {
+	for i := len(data) - 1; i > len(data)-1-int(padSize); i-- {
 		if data[i] != padSize {
-			valid = false
-			break
+			return data
 		}
 	}
 
-	if valid {
-		return data[:len(data)-int(padSize)]
-	}
-	return data
+	return data[:len(data)-int(padSize)]
 }
 
 func CombineUserData(input, key, iv []byte) []byte {
