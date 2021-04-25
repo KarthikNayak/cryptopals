@@ -25,6 +25,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 | 2   | 15       | 0h27m      | Yes              |
 | 2   | 16       | 0h47m      | Yes              |
 | 3   | 17       | 3h47m      | Yes              |
+| 3   | 18       | 0h41m      | Yes              |
 
 # Notes
 
@@ -67,3 +68,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 
 Theres's was a lot of initial confusion understand the question. The question fails to mention that the user has access to the IV. Which is slighyly hinted but not explicit.
 Beyond this, the math while is simple, is easy to mess up. I had a lot of confusion writing the code to ensure that it worked over multiple blocks. Finally resorting to splitting the blocks and discarding solved blocks.
+
+### Q18
+
+LittleEndian is a little tricky because, but go has encoding/binary to help :D 
