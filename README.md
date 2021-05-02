@@ -8,24 +8,25 @@ Do note that some of these were solved by me around a year ago, although I don't
 
 | Set | Question | Time Taken | Attempted before |
 | --- | -------- | ---------- | ---------------- |
-| 1   | 1        | 0h12m      | Yes              |
-| 1   | 2        | 0h15m      | Yes              |
-| 1   | 3        | 0h25m      | Yes              |
-| 1   | 4        | 0h14m      | Yes              |
-| 1   | 5        | 0h10m      | Yes              |
-| 1   | 6        | 1h21m      | Yes              |
-| 1   | 7        | 0h53m      | Yes              |
-| 1   | 8        | 0h10m      | Yes              |
-| 2   | 9        | 0h12m      | Yes              |
-| 2   | 10       | 0h29m      | Yes              |
-| 2   | 11       | 0h32m      | Yes              |
-| 2   | 12       | 1h29m      | Yes              |
-| 2   | 13       | 0h59m      | Yes              |
-| 2   | 14       | 1h07m      | Yes              |
-| 2   | 15       | 0h27m      | Yes              |
-| 2   | 16       | 0h47m      | Yes              |
-| 3   | 17       | 3h47m      | Yes              |
-| 3   | 18       | 0h41m      | Yes              |
+|   1 |        1 | 0h12m      | Yes              |
+|   1 |        2 | 0h15m      | Yes              |
+|   1 |        3 | 0h25m      | Yes              |
+|   1 |        4 | 0h14m      | Yes              |
+|   1 |        5 | 0h10m      | Yes              |
+|   1 |        6 | 1h21m      | Yes              |
+|   1 |        7 | 0h53m      | Yes              |
+|   1 |        8 | 0h10m      | Yes              |
+|   2 |        9 | 0h12m      | Yes              |
+|   2 |       10 | 0h29m      | Yes              |
+|   2 |       11 | 0h32m      | Yes              |
+|   2 |       12 | 1h29m      | Yes              |
+|   2 |       13 | 0h59m      | Yes              |
+|   2 |       14 | 1h07m      | Yes              |
+|   2 |       15 | 0h27m      | Yes              |
+|   2 |       16 | 0h47m      | Yes              |
+|   3 |       17 | 3h47m      | Yes              |
+|   3 |       18 | 0h41m      | Yes              |
+|   3 |       19 | 0h37m      | Yes              |
 
 # Notes
 
@@ -72,3 +73,8 @@ Beyond this, the math while is simple, is easy to mess up. I had a lot of confus
 ### Q18
 
 LittleEndian is a little tricky because, but go has encoding/binary to help :D 
+
+### Q19
+
+This is similar to most of the character frequency problems we've solved earlier, matter of fact I used the character frequency solution to solve this ;) 
+

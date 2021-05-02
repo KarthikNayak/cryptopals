@@ -91,3 +91,61 @@ func SolveQ17(generator func() ([]byte, []byte), checker func(data, IV []byte) b
 	}
 	fmt.Println(string(final))
 }
+
+func solveDigits(data []byte) byte {
+	ans := 0
+	maxVal := 0
+	for i := 0; i < 256; i++ {
+		res := 0
+		for _, val := range data {
+			x := val ^ byte(i)
+			cf, ok := charFrequency[x]
+			if !ok {
+				cf = -1
+			}
+			res += cf
+		}
+		if res > maxVal {
+			ans = i
+			maxVal = res
+		}
+	}
+	return byte(ans)
+}
+
+func SolveQ19(src [][]byte) {
+	nonce := 0
+	key := RandomAESKey()
+
+	ctr, _ := NewAesCtrCipher(key, int64(nonce))
+	enc := make([][]byte, len(src))
+
+	ciphLen := 0
+	for i, s := range src {
+		d := make([]byte, len(s))
+		ctr.Encrypt(d, s)
+		enc[i] = d
+		if len(d) > ciphLen {
+			ciphLen = len(d)
+		}
+	}
+
+	ciph := make([]byte, ciphLen)
+
+	for i := 0; i < len(ciph); i++ {
+		bits := make([]byte, 0)
+		for _, s := range enc {
+			if len(s) > i {
+				bits = append(bits, s[i])
+			}
+		}
+		ciph[i] = solveDigits(bits)
+	}
+
+	for _, s := range enc {
+		for i, bit := range s {
+			fmt.Printf("%s", string(bit^ciph[i]))
+		}
+		fmt.Println()
+	}
+}

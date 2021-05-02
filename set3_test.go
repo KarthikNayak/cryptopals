@@ -1,6 +1,8 @@
 package cryptopals
 
 import (
+	"bufio"
+	"os"
 	"strings"
 	"testing"
 )
@@ -29,4 +31,20 @@ func TestQ18(t *testing.T) {
 	if !strings.Contains(string(dst), "baby Ice, Ice") {
 		t.Fail()
 	}
+}
+
+func TestQ19(t *testing.T) {
+	f, _ := os.Open("_data/19.txt")
+	defer f.Close()
+
+	var data [][]byte
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line, _ := DecodeB64(scanner.Bytes())
+		data = append(data, line)
+	}
+
+	SolveQ19(data)
+	t.Fail()
 }
