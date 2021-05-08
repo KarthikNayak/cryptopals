@@ -149,3 +149,34 @@ func SolveQ19(src [][]byte) {
 		fmt.Println()
 	}
 }
+
+func SolveQ20(src [][]byte) {
+	minLen := len(src[0])
+
+	for _, str := range src {
+		if len(str) < minLen {
+			minLen = len(str)
+		}
+	}
+
+	var data []byte
+
+	for _, str := range src {
+		data = append(data, str[:minLen]...)
+	}
+
+	keySize := 16
+	blocks := breakIntoBlocks(data, keySize)
+	key := make([]byte, keySize)
+
+	for i := 0; i < keySize; i++ {
+		key[i], _, _ = SingleByteXorKeyRaw(blocks[i])
+	}
+
+	for i := 0; i < len(data); i++ {
+		if i%keySize == 0 {
+			fmt.Println()
+		}
+		fmt.Printf("%s", string(data[i]^key[i%keySize]))
+	}
+}

@@ -27,6 +27,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 |   3 |       17 | 3h47m      | Yes              |
 |   3 |       18 | 0h41m      | Yes              |
 |   3 |       19 | 0h37m      | Yes              |
+|   3 |       20 | 0h18m      | Yes              |
 
 # Notes
 
@@ -78,3 +79,6 @@ LittleEndian is a little tricky because, but go has encoding/binary to help :D
 
 This is similar to most of the character frequency problems we've solved earlier, matter of fact I used the character frequency solution to solve this ;) 
 
+### Q20
+
+This builds on top of repeating XOR decryption, using the code we built earlier, we can see how easy it is to break CTR encryption.

@@ -48,3 +48,19 @@ func TestQ19(t *testing.T) {
 	SolveQ19(data)
 	t.Fail()
 }
+
+func TestQ20(t *testing.T) {
+	f, _ := os.Open("_data/20.txt")
+	defer f.Close()
+
+	var data [][]byte
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line, _ := DecodeB64(scanner.Bytes())
+		data = append(data, line)
+	}
+
+	SolveQ20(data)
+	t.Fail()
+}
