@@ -347,7 +347,9 @@ func DecryptECBInconsistent() (string, error) {
 		x = append(filler, x...)
 
 		output := encryptor(x)
-		output = output[BlockSize:]
+		if len(output) > len(totalSize) {
+			output = output[BlockSize:]
+		}
 		x = append(x, final...)
 
 		blockToCmp := (i / blockSize)

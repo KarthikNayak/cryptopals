@@ -28,6 +28,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 |   3 |       18 | 0h41m      | Yes              |
 |   3 |       19 | 0h37m      | Yes              |
 |   3 |       20 | 0h18m      | Yes              |
+|   3 |       21 | 0h50m      | Yes              |
 
 # Notes
 
@@ -82,3 +83,9 @@ This is similar to most of the character frequency problems we've solved earlier
 ### Q20
 
 This builds on top of repeating XOR decryption, using the code we built earlier, we can see how easy it is to break CTR encryption.
+
+### Q21
+
+We just need to follow the pseudo code on wikipedia, I got stuck with a typo in the pseudo code, which took a while for me to figure out
+Verified via https://asecuritysite.com/encryption/twister
+

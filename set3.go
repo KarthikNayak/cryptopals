@@ -1,10 +1,12 @@
 package cryptopals
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -179,4 +181,63 @@ func SolveQ20(src [][]byte) {
 		}
 		fmt.Printf("%s", string(data[i]^key[i%keySize]))
 	}
+}
+
+func MT19937() (func(seed uint32), func() (uint32, error)) {
+	w, n, m, r := uint32(32), uint32(624), uint32(397), uint32(31)
+	a, _ := strconv.ParseUint("9908B0DF", 16, 32)
+	u := uint32(11)
+	d, _ := strconv.ParseUint("FFFFFFFF", 16, 32)
+	s := uint32(7)
+	b, _ := strconv.ParseUint("9D2C5680", 16, 32)
+	t := uint32(15)
+	c, _ := strconv.ParseUint("EFC60000", 16, 32)
+	l := uint32(18)
+	f := uint32(1812433253)
+
+	mt := make([]uint32, n)
+	index := uint32(n + 1)
+
+	lowerMask := uint32((1 << r) - 1)
+	upperMask := uint32(^lowerMask) & 0xFFFFFFFF
+
+	seed := func(seed uint32) {
+		index = n
+		mt[0] = seed
+		for i := uint32(1); i < (n - 1); i++ {
+			mt[i] = (f*((mt[i-1])^((mt[i-1])>>(w-2))) + i) & 0xFFFFFFFF
+		}
+	}
+
+	twist := func() {
+		for i := uint32(0); i < n; i++ {
+			x := (mt[i] & upperMask) + (mt[(i+1)%n] & lowerMask)
+			xA := x >> 1
+			if (x % 2) != 0 {
+				xA = xA ^ uint32(a)
+			}
+			mt[i] = mt[(i+m)%n] ^ xA
+		}
+		index = 0
+	}
+
+	extract := func() (uint32, error) {
+		if index >= n {
+			if index > n {
+				return 0, errors.New("no seed")
+			}
+			twist()
+		}
+
+		y := uint32(mt[index])
+		y = y ^ ((y >> u) & uint32(d))
+		y = y ^ ((y << s) & uint32(b))
+		y = y ^ ((y << t) & uint32(c))
+		y = y ^ (y >> l)
+
+		index = index + 1
+		return (y & 0xFFFFFFFF), nil
+	}
+
+	return seed, extract
 }

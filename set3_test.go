@@ -2,6 +2,7 @@ package cryptopals
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -46,7 +47,6 @@ func TestQ19(t *testing.T) {
 	}
 
 	SolveQ19(data)
-	t.Fail()
 }
 
 func TestQ20(t *testing.T) {
@@ -62,5 +62,15 @@ func TestQ20(t *testing.T) {
 	}
 
 	SolveQ20(data)
-	t.Fail()
+}
+
+func TestQ21(t *testing.T) {
+	seed, extract := MT19937()
+
+	seed(123)
+	x, err := extract()
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	fmt.Println(x)
 }
