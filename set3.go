@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func getNthLine(n int) string {
@@ -240,4 +241,39 @@ func MT19937() (func(seed uint32), func() (uint32, error)) {
 	}
 
 	return seed, extract
+}
+
+func MT19937WithRandomTime() (uint32, error) {
+	seed, extract := MT19937()
+
+	now := time.Now()
+
+	t := now.Add(-time.Nanosecond * time.Duration(rand.Intn(1040)-40))
+
+	seed(uint32(t.UnixNano()))
+
+	return extract()
+}
+
+func SolveMT19937Seed() error {
+	x, err := MT19937WithRandomTime()
+	if err != nil {
+		return err
+	}
+
+	now := time.Now().UnixNano()
+
+	for now > 0 {
+		seed, extract := MT19937()
+		seed(uint32(now))
+		y, _ := extract()
+
+		if x == y {
+			fmt.Println(x, y)
+			return nil
+		}
+		now = now - 1
+	}
+
+	return errors.New("couldn't find the seed")
 }

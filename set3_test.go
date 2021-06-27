@@ -2,7 +2,6 @@ package cryptopals
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -68,9 +67,48 @@ func TestQ21(t *testing.T) {
 	seed, extract := MT19937()
 
 	seed(123)
-	x, err := extract()
+	_, err := extract()
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	fmt.Println(x)
+}
+
+func TestQ22CheckSeedValues(t *testing.T) {
+	seed1, extract1 := MT19937()
+	seed2, extract2 := MT19937()
+	seed3, extract3 := MT19937()
+
+	seed1(6789)
+	seed2(6789)
+	seed3(6798)
+
+	x1, err := extract1()
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+
+	x2, err := extract2()
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+
+	x3, err := extract3()
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+
+	if x1 != x2 {
+		t.Fatal("same seed but different output")
+	}
+
+	if x2 == x3 {
+		t.Fatal("diff seed but same output")
+	}
+}
+
+func TestQ22(t *testing.T) {
+	err := SolveMT19937Seed()
+	if err != nil {
+		t.Fatal(err)
+	}
 }

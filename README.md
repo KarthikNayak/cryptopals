@@ -29,6 +29,7 @@ Do note that some of these were solved by me around a year ago, although I don't
 |   3 |       19 | 0h37m      | Yes              |
 |   3 |       20 | 0h18m      | Yes              |
 |   3 |       21 | 0h50m      | Yes              |
+|   3 |       22 | 0h25m      | Yes              |
 
 # Notes
 
